@@ -1,0 +1,1386 @@
+{
+  "Resources": {
+    "GWNodeVPCBE9CBA6D": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/Resource"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet1Subnet14D8B1CC": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/19",
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "elb_public_"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/Subnet"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet1RouteTable961033DF": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/RouteTable"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet1RouteTableAssociation2CEFB3C0": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCelbpublicSubnet1RouteTable961033DF"
+        },
+        "SubnetId": {
+          "Ref": "GWNodeVPCelbpublicSubnet1Subnet14D8B1CC"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/RouteTableAssociation"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet1DefaultRoute1A482B83": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCelbpublicSubnet1RouteTable961033DF"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "GWNodeVPCIGW45DA90AE"
+        }
+      },
+      "DependsOn": [
+        "GWNodeVPCVPCGW28C8E25D"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/DefaultRoute"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet1EIPB09D2189": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/EIP"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet1NATGateway23FDEDDF": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "GWNodeVPCelbpublicSubnet1Subnet14D8B1CC"
+        },
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "GWNodeVPCelbpublicSubnet1EIPB09D2189",
+            "AllocationId"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/NATGateway"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet2SubnetC1A6616D": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.32.0/19",
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "elb_public_"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public"
+          },
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/Subnet"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet2RouteTableD26B8C81": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/RouteTable"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet2RouteTableAssociationC8464E10": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCelbpublicSubnet2RouteTableD26B8C81"
+        },
+        "SubnetId": {
+          "Ref": "GWNodeVPCelbpublicSubnet2SubnetC1A6616D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/RouteTableAssociation"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet2DefaultRoute80CBFDFE": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCelbpublicSubnet2RouteTableD26B8C81"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "GWNodeVPCIGW45DA90AE"
+        }
+      },
+      "DependsOn": [
+        "GWNodeVPCVPCGW28C8E25D"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/DefaultRoute"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet2EIP640D8423": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/EIP"
+      }
+    },
+    "GWNodeVPCelbpublicSubnet2NATGatewayCD7935FD": {
+      "Type": "AWS::EC2::NatGateway",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "GWNodeVPCelbpublicSubnet2SubnetC1A6616D"
+        },
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "GWNodeVPCelbpublicSubnet2EIP640D8423",
+            "AllocationId"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/NATGateway"
+      }
+    },
+    "GWNodeVPCecsprivateSubnet1Subnet4E018615": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.64.0/19",
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "ecs_private_"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1/Subnet"
+      }
+    },
+    "GWNodeVPCecsprivateSubnet1RouteTable375E6FB9": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1/RouteTable"
+      }
+    },
+    "GWNodeVPCecsprivateSubnet1RouteTableAssociationE7259EA2": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCecsprivateSubnet1RouteTable375E6FB9"
+        },
+        "SubnetId": {
+          "Ref": "GWNodeVPCecsprivateSubnet1Subnet4E018615"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1/RouteTableAssociation"
+      }
+    },
+    "GWNodeVPCecsprivateSubnet1DefaultRouteBEDC737E": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCecsprivateSubnet1RouteTable375E6FB9"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "GWNodeVPCelbpublicSubnet1NATGateway23FDEDDF"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1/DefaultRoute"
+      }
+    },
+    "GWNodeVPCecsprivateSubnet2Subnet5A58DDD6": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.96.0/19",
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "ecs_private_"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private"
+          },
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2/Subnet"
+      }
+    },
+    "GWNodeVPCecsprivateSubnet2RouteTable6758AD39": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2/RouteTable"
+      }
+    },
+    "GWNodeVPCecsprivateSubnet2RouteTableAssociation51C47185": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCecsprivateSubnet2RouteTable6758AD39"
+        },
+        "SubnetId": {
+          "Ref": "GWNodeVPCecsprivateSubnet2Subnet5A58DDD6"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2/RouteTableAssociation"
+      }
+    },
+    "GWNodeVPCecsprivateSubnet2DefaultRoute724EB42D": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCecsprivateSubnet2RouteTable6758AD39"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "GWNodeVPCelbpublicSubnet2NATGatewayCD7935FD"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2/DefaultRoute"
+      }
+    },
+    "GWNodeVPCauroraisolatedSubnet1Subnet40EE0CCA": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.128.0/19",
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "aurora_isolated_"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated"
+          },
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1/Subnet"
+      }
+    },
+    "GWNodeVPCauroraisolatedSubnet1RouteTable298344ED": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1/RouteTable"
+      }
+    },
+    "GWNodeVPCauroraisolatedSubnet1RouteTableAssociation44238F2C": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCauroraisolatedSubnet1RouteTable298344ED"
+        },
+        "SubnetId": {
+          "Ref": "GWNodeVPCauroraisolatedSubnet1Subnet40EE0CCA"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1/RouteTableAssociation"
+      }
+    },
+    "GWNodeVPCauroraisolatedSubnet2SubnetF3503987": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.160.0/19",
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "aurora_isolated_"
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated"
+          },
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2/Subnet"
+      }
+    },
+    "GWNodeVPCauroraisolatedSubnet2RouteTable0B9BC677": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2/RouteTable"
+      }
+    },
+    "GWNodeVPCauroraisolatedSubnet2RouteTableAssociation1A3205D4": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "GWNodeVPCauroraisolatedSubnet2RouteTable0B9BC677"
+        },
+        "SubnetId": {
+          "Ref": "GWNodeVPCauroraisolatedSubnet2SubnetF3503987"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2/RouteTableAssociation"
+      }
+    },
+    "GWNodeVPCIGW45DA90AE": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "GeekweekinfraStack/GWNodeVPC"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/IGW"
+      }
+    },
+    "GWNodeVPCVPCGW28C8E25D": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        },
+        "InternetGatewayId": {
+          "Ref": "GWNodeVPCIGW45DA90AE"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/GWNodeVPC/VPCGW"
+      }
+    },
+    "AuroraSubnetGroup": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "Subnet group to access Aurora",
+        "SubnetIds": [
+          {
+            "Ref": "GWNodeVPCauroraisolatedSubnet1Subnet40EE0CCA"
+          },
+          {
+            "Ref": "GWNodeVPCauroraisolatedSubnet2SubnetF3503987"
+          }
+        ],
+        "DBSubnetGroupName": "aurora-serverless-subnet-group"
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/AuroraSubnetGroup"
+      }
+    },
+    "DBCredentialsSecretAFB45EA2": {
+      "Type": "AWS::SecretsManager::Secret",
+      "Properties": {
+        "GenerateSecretString": {
+          "ExcludePunctuation": true,
+          "GenerateStringKey": "password",
+          "IncludeSpace": false,
+          "SecretStringTemplate": "{\"username\":\"geekweek\"}"
+        },
+        "Name": "geekweek-node-dev-credentials"
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/DBCredentialsSecret/Resource"
+      }
+    },
+    "DBCredentialsArn15122902": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": {
+          "Ref": "DBCredentialsSecretAFB45EA2"
+        },
+        "Name": "geekweek-node-dev-credentials-arn"
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/DBCredentialsArn/Resource"
+      }
+    },
+    "DBClusterSecurityGroup74DEDB47": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "GeekweekinfraStack/DBClusterSecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "10.0.0.0/16",
+            "Description": "from 10.0.0.0/16:5432",
+            "FromPort": 5432,
+            "IpProtocol": "tcp",
+            "ToPort": 5432
+          }
+        ],
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/DBClusterSecurityGroup/Resource"
+      }
+    },
+    "DBCluster": {
+      "Type": "AWS::RDS::DBCluster",
+      "Properties": {
+        "Engine": "aurora-postgresql",
+        "DatabaseName": "bugbounty",
+        "DBClusterIdentifier": "geekweek-node-dev-cluster",
+        "DBSubnetGroupName": "aurora-serverless-subnet-group",
+        "EngineMode": "serverless",
+        "EngineVersion": "10.7",
+        "MasterUsername": {
+          "Fn::Join": [
+            "",
+            [
+              "{{resolve:secretsmanager:",
+              {
+                "Ref": "DBCredentialsSecretAFB45EA2"
+              },
+              ":SecretString:username::}}"
+            ]
+          ]
+        },
+        "MasterUserPassword": {
+          "Fn::Join": [
+            "",
+            [
+              "{{resolve:secretsmanager:",
+              {
+                "Ref": "DBCredentialsSecretAFB45EA2"
+              },
+              ":SecretString:password::}}"
+            ]
+          ]
+        },
+        "ScalingConfiguration": {
+          "AutoPause": true,
+          "MaxCapacity": 2,
+          "MinCapacity": 2,
+          "SecondsUntilAutoPause": 3600
+        },
+        "VpcSecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "DBClusterSecurityGroup74DEDB47",
+              "GroupId"
+            ]
+          }
+        ]
+      },
+      "DependsOn": [
+        "AuroraSubnetGroup"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/DBCluster"
+      }
+    },
+    "ClusterEB0386A7": {
+      "Type": "AWS::ECS::Cluster",
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/Cluster/Resource"
+      }
+    },
+    "FargateServiceLBB353E155": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "LoadBalancerAttributes": [
+          {
+            "Key": "deletion_protection.enabled",
+            "Value": "false"
+          }
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": [
+          {
+            "Fn::GetAtt": [
+              "FargateServiceLBSecurityGroup5F444C78",
+              "GroupId"
+            ]
+          }
+        ],
+        "Subnets": [
+          {
+            "Ref": "GWNodeVPCelbpublicSubnet1Subnet14D8B1CC"
+          },
+          {
+            "Ref": "GWNodeVPCelbpublicSubnet2SubnetC1A6616D"
+          }
+        ],
+        "Type": "application"
+      },
+      "DependsOn": [
+        "GWNodeVPCelbpublicSubnet1DefaultRoute1A482B83",
+        "GWNodeVPCelbpublicSubnet2DefaultRoute80CBFDFE"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/LB/Resource"
+      }
+    },
+    "FargateServiceLBSecurityGroup5F444C78": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Automatically created Security Group for ELB GeekweekinfraStackFargateServiceLB0D66CBA0",
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 80",
+            "FromPort": 80,
+            "IpProtocol": "tcp",
+            "ToPort": 80
+          }
+        ],
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/LB/SecurityGroup/Resource"
+      }
+    },
+    "FargateServiceLBSecurityGrouptoGeekweekinfraStackFargateServiceSecurityGroupE71435BA80A2E29BC1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Fn::GetAtt": [
+            "FargateServiceLBSecurityGroup5F444C78",
+            "GroupId"
+          ]
+        },
+        "IpProtocol": "tcp",
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Fn::GetAtt": [
+            "FargateServiceSecurityGroup262B61DD",
+            "GroupId"
+          ]
+        },
+        "FromPort": 80,
+        "ToPort": 80
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/LB/SecurityGroup/to GeekweekinfraStackFargateServiceSecurityGroupE71435BA:80"
+      }
+    },
+    "FargateServiceLBPublicListener4B4929CA": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "DefaultActions": [
+          {
+            "TargetGroupArn": {
+              "Ref": "FargateServiceLBPublicListenerECSGroupBE57E081"
+            },
+            "Type": "forward"
+          }
+        ],
+        "LoadBalancerArn": {
+          "Ref": "FargateServiceLBB353E155"
+        },
+        "Port": 80,
+        "Protocol": "HTTP"
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/LB/PublicListener/Resource"
+      }
+    },
+    "FargateServiceLBPublicListenerECSGroupBE57E081": {
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties": {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetGroupAttributes": [
+          {
+            "Key": "stickiness.enabled",
+            "Value": "false"
+          }
+        ],
+        "TargetType": "ip",
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/LB/PublicListener/ECSGroup/Resource"
+      }
+    },
+    "FargateServiceTaskDefTaskRole8CDCF85E": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/TaskDef/TaskRole/Resource"
+      }
+    },
+    "FargateServiceTaskDef940E3A80": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Environment": [
+              {
+                "Name": "DATABASE_HOST",
+                "Value": {
+                  "Fn::GetAtt": [
+                    "DBCluster",
+                    "Endpoint.Address"
+                  ]
+                }
+              },
+              {
+                "Name": "DATABASE_NAME",
+                "Value": "bugbounty"
+              },
+              {
+                "Name": "DATABASE_USERNAME",
+                "Value": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "{{resolve:secretsmanager:",
+                      {
+                        "Ref": "DBCredentialsSecretAFB45EA2"
+                      },
+                      ":SecretString:username::}}"
+                    ]
+                  ]
+                }
+              },
+              {
+                "Name": "DATABASE_PASSWORD",
+                "Value": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "{{resolve:secretsmanager:",
+                      {
+                        "Ref": "DBCredentialsSecretAFB45EA2"
+                      },
+                      ":SecretString:password::}}"
+                    ]
+                  ]
+                }
+              }
+            ],
+            "Essential": true,
+            "Image": "public.ecr.aws/r7j4v9s7/geekweek-node:latest",
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "FargateServiceTaskDefwebLogGroup71FAF541"
+                },
+                "awslogs-stream-prefix": "FargateService",
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            },
+            "Name": "web",
+            "PortMappings": [
+              {
+                "ContainerPort": 80,
+                "Protocol": "tcp"
+              }
+            ]
+          }
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "FargateServiceTaskDefExecutionRole9194820E",
+            "Arn"
+          ]
+        },
+        "Family": "GeekweekinfraStackFargateServiceTaskDefDF7D5BCC",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "FargateServiceTaskDefTaskRole8CDCF85E",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/TaskDef/Resource"
+      }
+    },
+    "FargateServiceTaskDefwebLogGroup71FAF541": {
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/TaskDef/web/LogGroup/Resource"
+      }
+    },
+    "FargateServiceTaskDefExecutionRole9194820E": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/TaskDef/ExecutionRole/Resource"
+      }
+    },
+    "FargateServiceTaskDefExecutionRoleDefaultPolicy827E7CA2": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "FargateServiceTaskDefwebLogGroup71FAF541",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "FargateServiceTaskDefExecutionRoleDefaultPolicy827E7CA2",
+        "Roles": [
+          {
+            "Ref": "FargateServiceTaskDefExecutionRole9194820E"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/TaskDef/ExecutionRole/DefaultPolicy/Resource"
+      }
+    },
+    "FargateServiceECC8084D": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": {
+          "Ref": "ClusterEB0386A7"
+        },
+        "DeploymentConfiguration": {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50
+        },
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": [
+          {
+            "ContainerName": "web",
+            "ContainerPort": 80,
+            "TargetGroupArn": {
+              "Ref": "FargateServiceLBPublicListenerECSGroupBE57E081"
+            }
+          }
+        ],
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": [
+              {
+                "Fn::GetAtt": [
+                  "FargateServiceSecurityGroup262B61DD",
+                  "GroupId"
+                ]
+              }
+            ],
+            "Subnets": [
+              {
+                "Ref": "GWNodeVPCecsprivateSubnet1Subnet4E018615"
+              },
+              {
+                "Ref": "GWNodeVPCecsprivateSubnet2Subnet5A58DDD6"
+              }
+            ]
+          }
+        },
+        "TaskDefinition": {
+          "Ref": "FargateServiceTaskDef940E3A80"
+        }
+      },
+      "DependsOn": [
+        "FargateServiceLBPublicListenerECSGroupBE57E081",
+        "FargateServiceLBPublicListener4B4929CA"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/Service/Service"
+      }
+    },
+    "FargateServiceSecurityGroup262B61DD": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "GeekweekinfraStack/FargateService/Service/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/Service/SecurityGroup/Resource"
+      }
+    },
+    "FargateServiceSecurityGroupfromGeekweekinfraStackFargateServiceLBSecurityGroup8BEFFFF580ADC73058": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "Load balancer to target",
+        "FromPort": 80,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "FargateServiceSecurityGroup262B61DD",
+            "GroupId"
+          ]
+        },
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "FargateServiceLBSecurityGroup5F444C78",
+            "GroupId"
+          ]
+        },
+        "ToPort": 80
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/FargateService/Service/SecurityGroup/from GeekweekinfraStackFargateServiceLBSecurityGroup8BEFFFF5:80"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/31TyU7DMBD9Fu6uWQTi3AVQJQRRi7iiiTOEoYkdeSlCVf6dsd20YREnv3mz+nl8Ic+v5NkJfLiJqjaThkq5W3tQG8HUyw7Vhdw9d0rMX/VzMRdFKBtS61Bq9JE7opUJHp+gbPDIH7mpc0YReDL6EBzBzbKIxwP4O/D4AZ+isLRleCy81B4t4yEgT7K3pp5nfWtRe7FGFSz5zztrQpdm+Je4qS0694te6sT3wlZO7ti7mOVRDlUWs3kTHM/UC4fKonctaKjRsnDJ3tdkxBGujXpa0nUBFlrkvOg/GL1AFRvlktE1wFuwNUT53GaBr6RpEO8nY7QH0mhH3D53jXZLKj9IhqndSwc+aurktOv4OdOz3BuoZtCAVlj9SMcGnCfVcESZIvg2W96Lv7PTJb7Z4zjiu+l9zIBH/ifuPNJ6ZPaCgLVcmbxg6SwM56WNyKgXjalZzXtTH0oMuO/FCp0JNuvxGHwX8uKOWNaySgr2QpsK5bs73Z5fy0v+Ie+OaGKD9tSiXOXzCyR65eE9AwAA"
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Outputs": {
+    "FargateServiceLoadBalancerDNS9433D5F6": {
+      "Value": {
+        "Fn::GetAtt": [
+          "FargateServiceLBB353E155",
+          "DNSName"
+        ]
+      }
+    },
+    "FargateServiceServiceURL47701F45": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "http://",
+            {
+              "Fn::GetAtt": [
+                "FargateServiceLBB353E155",
+                "DNSName"
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}

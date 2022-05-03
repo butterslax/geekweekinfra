@@ -1,0 +1,1700 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.0.127"
+        }
+      },
+      "GeekweekinfraStack": {
+        "id": "GeekweekinfraStack",
+        "path": "GeekweekinfraStack",
+        "children": {
+          "GWNodeVPC": {
+            "id": "GWNodeVPC",
+            "path": "GeekweekinfraStack/GWNodeVPC",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "GeekweekinfraStack/GWNodeVPC/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::VPC",
+                  "aws:cdk:cloudformation:props": {
+                    "cidrBlock": "10.0.0.0/16",
+                    "enableDnsHostnames": true,
+                    "enableDnsSupport": true,
+                    "instanceTenancy": "default",
+                    "tags": [
+                      {
+                        "key": "Name",
+                        "value": "GeekweekinfraStack/GWNodeVPC"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnVPC",
+                  "version": "2.15.0"
+                }
+              },
+              "elb_public_Subnet1": {
+                "id": "elb_public_Subnet1",
+                "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.0.0/19",
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            0,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": true,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "elb_public_"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Public"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet1RouteTable961033DF"
+                        },
+                        "subnetId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet1Subnet14D8B1CC"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet1RouteTable961033DF"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "gatewayId": {
+                          "Ref": "GWNodeVPCIGW45DA90AE"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRoute",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "EIP": {
+                    "id": "EIP",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/EIP",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::EIP",
+                      "aws:cdk:cloudformation:props": {
+                        "domain": "vpc",
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnEIP",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "NATGateway": {
+                    "id": "NATGateway",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1/NATGateway",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::NatGateway",
+                      "aws:cdk:cloudformation:props": {
+                        "subnetId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet1Subnet14D8B1CC"
+                        },
+                        "allocationId": {
+                          "Fn::GetAtt": [
+                            "GWNodeVPCelbpublicSubnet1EIPB09D2189",
+                            "AllocationId"
+                          ]
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnNatGateway",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PublicSubnet",
+                  "version": "2.15.0"
+                }
+              },
+              "elb_public_Subnet2": {
+                "id": "elb_public_Subnet2",
+                "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.32.0/19",
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            1,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": true,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "elb_public_"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Public"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet2RouteTableD26B8C81"
+                        },
+                        "subnetId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet2SubnetC1A6616D"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet2RouteTableD26B8C81"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "gatewayId": {
+                          "Ref": "GWNodeVPCIGW45DA90AE"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRoute",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "EIP": {
+                    "id": "EIP",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/EIP",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::EIP",
+                      "aws:cdk:cloudformation:props": {
+                        "domain": "vpc",
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnEIP",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "NATGateway": {
+                    "id": "NATGateway",
+                    "path": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2/NATGateway",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::NatGateway",
+                      "aws:cdk:cloudformation:props": {
+                        "subnetId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet2SubnetC1A6616D"
+                        },
+                        "allocationId": {
+                          "Fn::GetAtt": [
+                            "GWNodeVPCelbpublicSubnet2EIP640D8423",
+                            "AllocationId"
+                          ]
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/elb_public_Subnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnNatGateway",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PublicSubnet",
+                  "version": "2.15.0"
+                }
+              },
+              "ecs_private_Subnet1": {
+                "id": "ecs_private_Subnet1",
+                "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.64.0/19",
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            0,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "ecs_private_"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Private"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCecsprivateSubnet1RouteTable375E6FB9"
+                        },
+                        "subnetId": {
+                          "Ref": "GWNodeVPCecsprivateSubnet1Subnet4E018615"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet1/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCecsprivateSubnet1RouteTable375E6FB9"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "natGatewayId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet1NATGateway23FDEDDF"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRoute",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PrivateSubnet",
+                  "version": "2.15.0"
+                }
+              },
+              "ecs_private_Subnet2": {
+                "id": "ecs_private_Subnet2",
+                "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.96.0/19",
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            1,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "ecs_private_"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Private"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCecsprivateSubnet2RouteTable6758AD39"
+                        },
+                        "subnetId": {
+                          "Ref": "GWNodeVPCecsprivateSubnet2Subnet5A58DDD6"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "GeekweekinfraStack/GWNodeVPC/ecs_private_Subnet2/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCecsprivateSubnet2RouteTable6758AD39"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "natGatewayId": {
+                          "Ref": "GWNodeVPCelbpublicSubnet2NATGatewayCD7935FD"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRoute",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PrivateSubnet",
+                  "version": "2.15.0"
+                }
+              },
+              "aurora_isolated_Subnet1": {
+                "id": "aurora_isolated_Subnet1",
+                "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.128.0/19",
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            0,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "aurora_isolated_"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Isolated"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCauroraisolatedSubnet1RouteTable298344ED"
+                        },
+                        "subnetId": {
+                          "Ref": "GWNodeVPCauroraisolatedSubnet1Subnet40EE0CCA"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PrivateSubnet",
+                  "version": "2.15.0"
+                }
+              },
+              "aurora_isolated_Subnet2": {
+                "id": "aurora_isolated_Subnet2",
+                "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.160.0/19",
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            1,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "aurora_isolated_"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Isolated"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnet",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2/Acl",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "GWNodeVPCBE9CBA6D"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnRouteTable",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "GeekweekinfraStack/GWNodeVPC/aurora_isolated_Subnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "GWNodeVPCauroraisolatedSubnet2RouteTable0B9BC677"
+                        },
+                        "subnetId": {
+                          "Ref": "GWNodeVPCauroraisolatedSubnet2SubnetF3503987"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSubnetRouteTableAssociation",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.PrivateSubnet",
+                  "version": "2.15.0"
+                }
+              },
+              "IGW": {
+                "id": "IGW",
+                "path": "GeekweekinfraStack/GWNodeVPC/IGW",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::InternetGateway",
+                  "aws:cdk:cloudformation:props": {
+                    "tags": [
+                      {
+                        "key": "Name",
+                        "value": "GeekweekinfraStack/GWNodeVPC"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnInternetGateway",
+                  "version": "2.15.0"
+                }
+              },
+              "VPCGW": {
+                "id": "VPCGW",
+                "path": "GeekweekinfraStack/GWNodeVPC/VPCGW",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::VPCGatewayAttachment",
+                  "aws:cdk:cloudformation:props": {
+                    "vpcId": {
+                      "Ref": "GWNodeVPCBE9CBA6D"
+                    },
+                    "internetGatewayId": {
+                      "Ref": "GWNodeVPCIGW45DA90AE"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnVPCGatewayAttachment",
+                  "version": "2.15.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.Vpc",
+              "version": "2.15.0"
+            }
+          },
+          "AuroraSubnetGroup": {
+            "id": "AuroraSubnetGroup",
+            "path": "GeekweekinfraStack/AuroraSubnetGroup",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::RDS::DBSubnetGroup",
+              "aws:cdk:cloudformation:props": {
+                "dbSubnetGroupDescription": "Subnet group to access Aurora",
+                "subnetIds": [
+                  {
+                    "Ref": "GWNodeVPCauroraisolatedSubnet1Subnet40EE0CCA"
+                  },
+                  {
+                    "Ref": "GWNodeVPCauroraisolatedSubnet2SubnetF3503987"
+                  }
+                ],
+                "dbSubnetGroupName": "aurora-serverless-subnet-group"
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_rds.CfnDBSubnetGroup",
+              "version": "2.15.0"
+            }
+          },
+          "DBCredentialsSecret": {
+            "id": "DBCredentialsSecret",
+            "path": "GeekweekinfraStack/DBCredentialsSecret",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "GeekweekinfraStack/DBCredentialsSecret/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SecretsManager::Secret",
+                  "aws:cdk:cloudformation:props": {
+                    "generateSecretString": {
+                      "secretStringTemplate": "{\"username\":\"geekweek\"}",
+                      "excludePunctuation": true,
+                      "includeSpace": false,
+                      "generateStringKey": "password"
+                    },
+                    "name": "geekweek-node-dev-credentials"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_secretsmanager.CfnSecret",
+                  "version": "2.15.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_secretsmanager.Secret",
+              "version": "2.15.0"
+            }
+          },
+          "DBCredentialsArn": {
+            "id": "DBCredentialsArn",
+            "path": "GeekweekinfraStack/DBCredentialsArn",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "GeekweekinfraStack/DBCredentialsArn/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": {
+                      "Ref": "DBCredentialsSecretAFB45EA2"
+                    },
+                    "name": "geekweek-node-dev-credentials-arn"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
+                  "version": "2.15.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
+              "version": "2.15.0"
+            }
+          },
+          "DBClusterSecurityGroup": {
+            "id": "DBClusterSecurityGroup",
+            "path": "GeekweekinfraStack/DBClusterSecurityGroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "GeekweekinfraStack/DBClusterSecurityGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "GeekweekinfraStack/DBClusterSecurityGroup",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "description": "Allow all outbound traffic by default",
+                        "ipProtocol": "-1"
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "cidrIp": "10.0.0.0/16",
+                        "ipProtocol": "tcp",
+                        "fromPort": 5432,
+                        "toPort": 5432,
+                        "description": "from 10.0.0.0/16:5432"
+                      }
+                    ],
+                    "vpcId": {
+                      "Ref": "GWNodeVPCBE9CBA6D"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.15.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+              "version": "2.15.0"
+            }
+          },
+          "DBCluster": {
+            "id": "DBCluster",
+            "path": "GeekweekinfraStack/DBCluster",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::RDS::DBCluster",
+              "aws:cdk:cloudformation:props": {
+                "engine": "aurora-postgresql",
+                "databaseName": "bugbounty",
+                "dbClusterIdentifier": "geekweek-node-dev-cluster",
+                "dbSubnetGroupName": "aurora-serverless-subnet-group",
+                "engineMode": "serverless",
+                "engineVersion": "10.7",
+                "masterUsername": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "{{resolve:secretsmanager:",
+                      {
+                        "Ref": "DBCredentialsSecretAFB45EA2"
+                      },
+                      ":SecretString:username::}}"
+                    ]
+                  ]
+                },
+                "masterUserPassword": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "{{resolve:secretsmanager:",
+                      {
+                        "Ref": "DBCredentialsSecretAFB45EA2"
+                      },
+                      ":SecretString:password::}}"
+                    ]
+                  ]
+                },
+                "scalingConfiguration": {
+                  "autoPause": true,
+                  "maxCapacity": 2,
+                  "minCapacity": 2,
+                  "secondsUntilAutoPause": 3600
+                },
+                "vpcSecurityGroupIds": [
+                  {
+                    "Fn::GetAtt": [
+                      "DBClusterSecurityGroup74DEDB47",
+                      "GroupId"
+                    ]
+                  }
+                ]
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_rds.CfnDBCluster",
+              "version": "2.15.0"
+            }
+          },
+          "Cluster": {
+            "id": "Cluster",
+            "path": "GeekweekinfraStack/Cluster",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "GeekweekinfraStack/Cluster/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Cluster",
+                  "aws:cdk:cloudformation:props": {}
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnCluster",
+                  "version": "2.15.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.Cluster",
+              "version": "2.15.0"
+            }
+          },
+          "FargateService": {
+            "id": "FargateService",
+            "path": "GeekweekinfraStack/FargateService",
+            "children": {
+              "LB": {
+                "id": "LB",
+                "path": "GeekweekinfraStack/FargateService/LB",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GeekweekinfraStack/FargateService/LB/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+                      "aws:cdk:cloudformation:props": {
+                        "loadBalancerAttributes": [
+                          {
+                            "key": "deletion_protection.enabled",
+                            "value": "false"
+                          }
+                        ],
+                        "scheme": "internet-facing",
+                        "securityGroups": [
+                          {
+                            "Fn::GetAtt": [
+                              "FargateServiceLBSecurityGroup5F444C78",
+                              "GroupId"
+                            ]
+                          }
+                        ],
+                        "subnets": [
+                          {
+                            "Ref": "GWNodeVPCelbpublicSubnet1Subnet14D8B1CC"
+                          },
+                          {
+                            "Ref": "GWNodeVPCelbpublicSubnet2SubnetC1A6616D"
+                          }
+                        ],
+                        "type": "application"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "SecurityGroup": {
+                    "id": "SecurityGroup",
+                    "path": "GeekweekinfraStack/FargateService/LB/SecurityGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GeekweekinfraStack/FargateService/LB/SecurityGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "groupDescription": "Automatically created Security Group for ELB GeekweekinfraStackFargateServiceLB0D66CBA0",
+                            "securityGroupIngress": [
+                              {
+                                "cidrIp": "0.0.0.0/0",
+                                "ipProtocol": "tcp",
+                                "fromPort": 80,
+                                "toPort": 80,
+                                "description": "Allow from anyone on port 80"
+                              }
+                            ],
+                            "vpcId": {
+                              "Ref": "GWNodeVPCBE9CBA6D"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                          "version": "2.15.0"
+                        }
+                      },
+                      "to GeekweekinfraStackFargateServiceSecurityGroupE71435BA:80": {
+                        "id": "to GeekweekinfraStackFargateServiceSecurityGroupE71435BA:80",
+                        "path": "GeekweekinfraStack/FargateService/LB/SecurityGroup/to GeekweekinfraStackFargateServiceSecurityGroupE71435BA:80",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupEgress",
+                          "aws:cdk:cloudformation:props": {
+                            "groupId": {
+                              "Fn::GetAtt": [
+                                "FargateServiceLBSecurityGroup5F444C78",
+                                "GroupId"
+                              ]
+                            },
+                            "ipProtocol": "tcp",
+                            "description": "Load balancer to target",
+                            "destinationSecurityGroupId": {
+                              "Fn::GetAtt": [
+                                "FargateServiceSecurityGroup262B61DD",
+                                "GroupId"
+                              ]
+                            },
+                            "fromPort": 80,
+                            "toPort": 80
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupEgress",
+                          "version": "2.15.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "PublicListener": {
+                    "id": "PublicListener",
+                    "path": "GeekweekinfraStack/FargateService/LB/PublicListener",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GeekweekinfraStack/FargateService/LB/PublicListener/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                          "aws:cdk:cloudformation:props": {
+                            "defaultActions": [
+                              {
+                                "type": "forward",
+                                "targetGroupArn": {
+                                  "Ref": "FargateServiceLBPublicListenerECSGroupBE57E081"
+                                }
+                              }
+                            ],
+                            "loadBalancerArn": {
+                              "Ref": "FargateServiceLBB353E155"
+                            },
+                            "port": 80,
+                            "protocol": "HTTP"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                          "version": "2.15.0"
+                        }
+                      },
+                      "ECSGroup": {
+                        "id": "ECSGroup",
+                        "path": "GeekweekinfraStack/FargateService/LB/PublicListener/ECSGroup",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GeekweekinfraStack/FargateService/LB/PublicListener/ECSGroup/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+                              "aws:cdk:cloudformation:props": {
+                                "port": 80,
+                                "protocol": "HTTP",
+                                "targetGroupAttributes": [
+                                  {
+                                    "key": "stickiness.enabled",
+                                    "value": "false"
+                                  }
+                                ],
+                                "targetType": "ip",
+                                "vpcId": {
+                                  "Ref": "GWNodeVPCBE9CBA6D"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
+                              "version": "2.15.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationTargetGroup",
+                          "version": "2.15.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer",
+                  "version": "2.15.0"
+                }
+              },
+              "LoadBalancerDNS": {
+                "id": "LoadBalancerDNS",
+                "path": "GeekweekinfraStack/FargateService/LoadBalancerDNS",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.15.0"
+                }
+              },
+              "ServiceURL": {
+                "id": "ServiceURL",
+                "path": "GeekweekinfraStack/FargateService/ServiceURL",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.15.0"
+                }
+              },
+              "TaskDef": {
+                "id": "TaskDef",
+                "path": "GeekweekinfraStack/FargateService/TaskDef",
+                "children": {
+                  "TaskRole": {
+                    "id": "TaskRole",
+                    "path": "GeekweekinfraStack/FargateService/TaskDef/TaskRole",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GeekweekinfraStack/FargateService/TaskDef/TaskRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "ecs-tasks.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.15.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "GeekweekinfraStack/FargateService/TaskDef/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                      "aws:cdk:cloudformation:props": {
+                        "containerDefinitions": [
+                          {
+                            "essential": true,
+                            "image": "public.ecr.aws/r7j4v9s7/geekweek-node:latest",
+                            "name": "web",
+                            "portMappings": [
+                              {
+                                "containerPort": 80,
+                                "protocol": "tcp"
+                              }
+                            ],
+                            "logConfiguration": {
+                              "logDriver": "awslogs",
+                              "options": {
+                                "awslogs-group": {
+                                  "Ref": "FargateServiceTaskDefwebLogGroup71FAF541"
+                                },
+                                "awslogs-stream-prefix": "FargateService",
+                                "awslogs-region": {
+                                  "Ref": "AWS::Region"
+                                }
+                              }
+                            },
+                            "environment": [
+                              {
+                                "name": "DATABASE_HOST",
+                                "value": {
+                                  "Fn::GetAtt": [
+                                    "DBCluster",
+                                    "Endpoint.Address"
+                                  ]
+                                }
+                              },
+                              {
+                                "name": "DATABASE_NAME",
+                                "value": "bugbounty"
+                              },
+                              {
+                                "name": "DATABASE_USERNAME",
+                                "value": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "{{resolve:secretsmanager:",
+                                      {
+                                        "Ref": "DBCredentialsSecretAFB45EA2"
+                                      },
+                                      ":SecretString:username::}}"
+                                    ]
+                                  ]
+                                }
+                              },
+                              {
+                                "name": "DATABASE_PASSWORD",
+                                "value": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "{{resolve:secretsmanager:",
+                                      {
+                                        "Ref": "DBCredentialsSecretAFB45EA2"
+                                      },
+                                      ":SecretString:password::}}"
+                                    ]
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        ],
+                        "cpu": "256",
+                        "executionRoleArn": {
+                          "Fn::GetAtt": [
+                            "FargateServiceTaskDefExecutionRole9194820E",
+                            "Arn"
+                          ]
+                        },
+                        "family": "GeekweekinfraStackFargateServiceTaskDefDF7D5BCC",
+                        "memory": "512",
+                        "networkMode": "awsvpc",
+                        "requiresCompatibilities": [
+                          "FARGATE"
+                        ],
+                        "taskRoleArn": {
+                          "Fn::GetAtt": [
+                            "FargateServiceTaskDefTaskRole8CDCF85E",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ecs.CfnTaskDefinition",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "web": {
+                    "id": "web",
+                    "path": "GeekweekinfraStack/FargateService/TaskDef/web",
+                    "children": {
+                      "LogGroup": {
+                        "id": "LogGroup",
+                        "path": "GeekweekinfraStack/FargateService/TaskDef/web/LogGroup",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GeekweekinfraStack/FargateService/TaskDef/web/LogGroup/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                              "aws:cdk:cloudformation:props": {}
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                              "version": "2.15.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_logs.LogGroup",
+                          "version": "2.15.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ecs.ContainerDefinition",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "ExecutionRole": {
+                    "id": "ExecutionRole",
+                    "path": "GeekweekinfraStack/FargateService/TaskDef/ExecutionRole",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GeekweekinfraStack/FargateService/TaskDef/ExecutionRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "ecs-tasks.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.15.0"
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "GeekweekinfraStack/FargateService/TaskDef/ExecutionRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "GeekweekinfraStack/FargateService/TaskDef/ExecutionRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::GetAtt": [
+                                          "FargateServiceTaskDefwebLogGroup71FAF541",
+                                          "Arn"
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "FargateServiceTaskDefExecutionRoleDefaultPolicy827E7CA2",
+                                "roles": [
+                                  {
+                                    "Ref": "FargateServiceTaskDefExecutionRole9194820E"
+                                  }
+                                ]
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                              "version": "2.15.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Policy",
+                          "version": "2.15.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.FargateTaskDefinition",
+                  "version": "2.15.0"
+                }
+              },
+              "Service": {
+                "id": "Service",
+                "path": "GeekweekinfraStack/FargateService/Service",
+                "children": {
+                  "Service": {
+                    "id": "Service",
+                    "path": "GeekweekinfraStack/FargateService/Service/Service",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ECS::Service",
+                      "aws:cdk:cloudformation:props": {
+                        "cluster": {
+                          "Ref": "ClusterEB0386A7"
+                        },
+                        "deploymentConfiguration": {
+                          "maximumPercent": 200,
+                          "minimumHealthyPercent": 50
+                        },
+                        "enableEcsManagedTags": false,
+                        "healthCheckGracePeriodSeconds": 60,
+                        "launchType": "FARGATE",
+                        "loadBalancers": [
+                          {
+                            "targetGroupArn": {
+                              "Ref": "FargateServiceLBPublicListenerECSGroupBE57E081"
+                            },
+                            "containerName": "web",
+                            "containerPort": 80
+                          }
+                        ],
+                        "networkConfiguration": {
+                          "awsvpcConfiguration": {
+                            "assignPublicIp": "DISABLED",
+                            "subnets": [
+                              {
+                                "Ref": "GWNodeVPCecsprivateSubnet1Subnet4E018615"
+                              },
+                              {
+                                "Ref": "GWNodeVPCecsprivateSubnet2Subnet5A58DDD6"
+                              }
+                            ],
+                            "securityGroups": [
+                              {
+                                "Fn::GetAtt": [
+                                  "FargateServiceSecurityGroup262B61DD",
+                                  "GroupId"
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "taskDefinition": {
+                          "Ref": "FargateServiceTaskDef940E3A80"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ecs.CfnService",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "SecurityGroup": {
+                    "id": "SecurityGroup",
+                    "path": "GeekweekinfraStack/FargateService/Service/SecurityGroup",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "GeekweekinfraStack/FargateService/Service/SecurityGroup/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                          "aws:cdk:cloudformation:props": {
+                            "groupDescription": "GeekweekinfraStack/FargateService/Service/SecurityGroup",
+                            "securityGroupEgress": [
+                              {
+                                "cidrIp": "0.0.0.0/0",
+                                "description": "Allow all outbound traffic by default",
+                                "ipProtocol": "-1"
+                              }
+                            ],
+                            "vpcId": {
+                              "Ref": "GWNodeVPCBE9CBA6D"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                          "version": "2.15.0"
+                        }
+                      },
+                      "from GeekweekinfraStackFargateServiceLBSecurityGroup8BEFFFF5:80": {
+                        "id": "from GeekweekinfraStackFargateServiceLBSecurityGroup8BEFFFF5:80",
+                        "path": "GeekweekinfraStack/FargateService/Service/SecurityGroup/from GeekweekinfraStackFargateServiceLBSecurityGroup8BEFFFF5:80",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                          "aws:cdk:cloudformation:props": {
+                            "ipProtocol": "tcp",
+                            "description": "Load balancer to target",
+                            "fromPort": 80,
+                            "groupId": {
+                              "Fn::GetAtt": [
+                                "FargateServiceSecurityGroup262B61DD",
+                                "GroupId"
+                              ]
+                            },
+                            "sourceSecurityGroupId": {
+                              "Fn::GetAtt": [
+                                "FargateServiceLBSecurityGroup5F444C78",
+                                "GroupId"
+                              ]
+                            },
+                            "toPort": 80
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                          "version": "2.15.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.FargateService",
+                  "version": "2.15.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs_patterns.ApplicationLoadBalancedFargateService",
+              "version": "2.15.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "GeekweekinfraStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "GeekweekinfraStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.15.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "GeekweekinfraStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.15.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.0.127"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.15.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.15.0"
+    }
+  }
+}
