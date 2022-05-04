@@ -89,7 +89,7 @@ export class GeekweekinfraStack extends Stack {
     const initNodeContainer = ecsInitNodeTask.addContainer("initContainer", {
       image: ecs.ContainerImage.fromRegistry("public.ecr.aws/r7j4v9s7/geekweek-node-init:latest"),
       environment: {
-        DB_HOST: "super long string I need to build",
+        DB_URL: "super long string I need to build",
       }
     });
     
