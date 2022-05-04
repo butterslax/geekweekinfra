@@ -81,19 +81,54 @@ export class GeekweekinfraStack extends Stack {
     const rdsCluster = new rds.CfnDBCluster(this, 'DBCluster', dbConfig);
     rdsCluster.addDependsOn(dbSubnetGroup)
 
-    const cluster = new ecs.Cluster(this, 'Cluster', { vpc });
-    const loadBalancedService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "FargateService", {
-      cluster,
-      taskImageOptions: {
-        image: ecs.ContainerImage.fromRegistry("public.ecr.aws/r7j4v9s7/geekweek-node:latest"),
-        environment: {
-          DATABASE_HOST: rdsCluster.attrEndpointAddress,
-          DATABASE_NAME: databaseName,
-          DATABASE_USERNAME: databaseCredentialsSecret.secretValueFromJson('username').toString(),
-          DATABASE_PASSWORD: databaseCredentialsSecret.secretValueFromJson('password').toString(),
-        }
-      },
+    const ecsInitNodeTask = new ecs.FargateTaskDefinition(this, "TaskDef", {
+      memoryLimitMiB: 512,
+      cpu: 256
     });
+
+    const initNodeContainer = ecsInitNodeTask.addContainer("initContainer", {
+      image: ecs.ContainerImage.fromRegistry("public.ecr.aws/r7j4v9s7/geekweek-node-init:latest"),
+      environment: {
+        DB_HOST: "super long string I need to build",
+      }
+    });
+    
+    const initDependency: ecs.ContainerDependency = {
+      container: initNodeContainer,
+      condition: ecs.ContainerDependencyCondition.COMPLETE,
+    }
+    
+    const ecsNodeTask = new ecs.FargateTaskDefinition(this, "TaskDef", {
+      memoryLimitMiB: 512,
+      cpu: 256
+    });
+
+    const nodeContainer = ecsNodeTask.addContainer("NodeContainer", {
+      image: ecs.ContainerImage.fromRegistry("public.ecr.aws/r7j4v9s7/geekweek-node:latest"),
+      environment: {
+              DB_HOST: rdsCluster.attrEndpointAddress,
+              DB_PORT: "5432",
+              DB_NAME: databaseName,
+              DB_USER: databaseCredentialsSecret.secretValueFromJson('username').toString(),
+              DB_PASS: databaseCredentialsSecret.secretValueFromJson('password').toString(),
+           }
+    });
+
+    nodeContainer.addContainerDependencies(initDependency);
+
+    //const cluster = new ecs.Cluster(this, 'Cluster', { vpc });
+    //const loadBalancedService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "FargateService", {
+    //  cluster,
+    //  taskImageOptions: {
+    //    image: ecs.ContainerImage.fromRegistry("public.ecr.aws/r7j4v9s7/geekweek-node:latest"),
+    //    environment: {
+    //      DATABASE_HOST: rdsCluster.attrEndpointAddress,
+    //      DATABASE_NAME: databaseName,
+    //      DATABASE_USERNAME: databaseCredentialsSecret.secretValueFromJson('username').toString(),
+    //      DATABASE_PASSWORD: databaseCredentialsSecret.secretValueFromJson('password').toString(),
+    //    }
+    //  },
+    //});
  
   }
 

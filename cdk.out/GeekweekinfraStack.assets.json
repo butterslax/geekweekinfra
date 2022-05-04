@@ -1,7 +1,7 @@
 {
   "version": "16.0.0",
   "files": {
-    "70f046a4ba3e136677acbdeaffd15cc711d301f4bde6b078f849ef959919410a": {
+    "c45fe167ea34678a32081f0960455ab494dde8073b13e1ac83f3012c6fdac9a4": {
       "source": {
         "path": "GeekweekinfraStack.template.json",
         "packaging": "file"
@@ -9,7 +9,7 @@
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "70f046a4ba3e136677acbdeaffd15cc711d301f4bde6b078f849ef959919410a.json",
+          "objectKey": "c45fe167ea34678a32081f0960455ab494dde8073b13e1ac83f3012c6fdac9a4.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }
