@@ -743,7 +743,7 @@
             "Environment": [
               {
                 "Name": "DB_URL",
-                "Value": "super long string I need to build"
+                "Value": "postgres://${DB_USER}:${DB_PASSWORD}@${rdsCluster.attrEndpointAddress}:${DB_PORT.toString()}/${databaseName}?sslmode=disable"
               }
             ],
             "Essential": true,

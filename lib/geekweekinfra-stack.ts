@@ -53,6 +53,10 @@ export class GeekweekinfraStack extends Stack {
       }
     });
 
+    const DB_USER = databaseCredentialsSecret.secretValueFromJson('username').toString();
+    const DB_PASSWORD = databaseCredentialsSecret.secretValueFromJson('password').toString();
+    const DB_PORT = 5432;
+
     new ssm.StringParameter(this, 'DBCredentialsArn', {
       parameterName: `${serviceName}-${stage}-credentials-arn`,
       stringValue: databaseCredentialsSecret.secretArn,
@@ -67,8 +71,8 @@ export class GeekweekinfraStack extends Stack {
       engine: 'aurora-postgresql',
       engineVersion: '10.7',
       databaseName: databaseName,
-      masterUsername: databaseCredentialsSecret.secretValueFromJson('username').toString(),
-      masterUserPassword: databaseCredentialsSecret.secretValueFromJson('password').toString(),
+      masterUsername: DB_USER,
+      masterUserPassword: DB_PASSWORD,
       dbSubnetGroupName: dbSubnetGroup.dbSubnetGroupName,
       scalingConfiguration: {
         autoPause: true,
@@ -92,7 +96,7 @@ export class GeekweekinfraStack extends Stack {
     const initNodeContainer = ecsInitNodeTask.addContainer("initContainer", {
       image: ecs.ContainerImage.fromRegistry("public.ecr.aws/r7j4v9s7/geekweek-node-init:latest"),
       environment: {
-        DB_URL: "super long string I need to build",
+        DB_URL: "postgres://${DB_USER}:${DB_PASSWORD}@${rdsCluster.attrEndpointAddress}:${DB_PORT.toString()}/${databaseName}?sslmode=disable",
       }
     });
     
@@ -110,10 +114,10 @@ export class GeekweekinfraStack extends Stack {
       image: ecs.ContainerImage.fromRegistry("public.ecr.aws/r7j4v9s7/geekweek-node:latest"),
       environment: {
               DB_HOST: rdsCluster.attrEndpointAddress,
-              DB_PORT: "5432",
+              DB_PORT: DB_PORT.toString(),
               DB_NAME: databaseName,
-              DB_USER: databaseCredentialsSecret.secretValueFromJson('username').toString(),
-              DB_PASS: databaseCredentialsSecret.secretValueFromJson('password').toString(),
+              DB_USER: DB_USER,
+              DB_PASS: DB_PASSWORD,
            }
     });
 
@@ -146,6 +150,7 @@ export class GeekweekinfraStack extends Stack {
         }),
       },
     );
+
 
     //const cluster = new ecs.Cluster(this, 'Cluster', { vpc });
     //const loadBalancedService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "FargateService", {
