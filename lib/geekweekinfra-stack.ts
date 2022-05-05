@@ -1,5 +1,6 @@
-import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import * as ec2 from "aws-cdk-lib/aws-ec2";
+import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2"
 import { SubnetType } from 'aws-cdk-lib/aws-ec2';
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
@@ -8,6 +9,8 @@ import * as secretsManager from "aws-cdk-lib/aws-secretsmanager";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { CfnDBSubnetGroup } from 'aws-cdk-lib/aws-rds';
 import { Construct } from 'constructs';
+import { ELBv2ACMCertificateRequired } from 'cdk-nag/lib/rules/elb';
+import { truncate } from 'fs';
 
 export class GeekweekinfraStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -81,7 +84,7 @@ export class GeekweekinfraStack extends Stack {
     const rdsCluster = new rds.CfnDBCluster(this, 'DBCluster', dbConfig);
     rdsCluster.addDependsOn(dbSubnetGroup)
 
-    const ecsInitNodeTask = new ecs.FargateTaskDefinition(this, "TaskDef", {
+    const ecsInitNodeTask = new ecs.FargateTaskDefinition(this, "InitTaskDef", {
       memoryLimitMiB: 512,
       cpu: 256
     });
@@ -98,7 +101,7 @@ export class GeekweekinfraStack extends Stack {
       condition: ecs.ContainerDependencyCondition.COMPLETE,
     }
     
-    const ecsNodeTask = new ecs.FargateTaskDefinition(this, "TaskDef", {
+    const ecsNodeTask = new ecs.FargateTaskDefinition(this, "NodeTaskDef", {
       memoryLimitMiB: 512,
       cpu: 256
     });
@@ -114,7 +117,35 @@ export class GeekweekinfraStack extends Stack {
            }
     });
 
+    nodeContainer.addPortMappings({
+      hostPort: 3000,
+      containerPort: 3000
+    });
+
     nodeContainer.addContainerDependencies(initDependency);
+
+    const cluster = new ecs.Cluster(this, "Cluster", { vpc:vpc, });
+    const service= new ecs.FargateService(this, "Service", {
+      cluster: cluster,
+      taskDefinition: ecsNodeTask,
+    });
+
+    const lb = new elbv2.ApplicationLoadBalancer(this, "LB", {
+      vpc: vpc,
+      internetFacing: true,
+    });
+
+    const listener = lb.addListener("Listener", { port: 3000, protocol: elbv2.ApplicationProtocol.HTTP, });
+    service.registerLoadBalancerTargets(
+      {
+        containerName:"NodeContainer",
+        containerPort: 3000,
+        newTargetGroupId: "ECS",
+        listener: ecs.ListenerConfig.applicationListener(listener, {
+          protocol: elbv2.ApplicationProtocol.HTTP
+        }),
+      },
+    );
 
     //const cluster = new ecs.Cluster(this, 'Cluster', { vpc });
     //const loadBalancedService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "FargateService", {

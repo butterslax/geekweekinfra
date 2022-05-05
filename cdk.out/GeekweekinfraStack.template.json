@@ -715,10 +715,400 @@
         "aws:cdk:path": "GeekweekinfraStack/DBCluster"
       }
     },
+    "InitTaskDefTaskRoleB60895B1": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/InitTaskDef/TaskRole/Resource"
+      }
+    },
+    "InitTaskDef6FF728DE": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "Environment": [
+              {
+                "Name": "DB_URL",
+                "Value": "super long string I need to build"
+              }
+            ],
+            "Essential": true,
+            "Image": "public.ecr.aws/r7j4v9s7/geekweek-node-init:latest",
+            "Name": "initContainer"
+          }
+        ],
+        "Cpu": "256",
+        "Family": "GeekweekinfraStackInitTaskDefE76BD189",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "InitTaskDefTaskRoleB60895B1",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/InitTaskDef/Resource"
+      }
+    },
+    "NodeTaskDefTaskRole9A06DB29": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/NodeTaskDef/TaskRole/Resource"
+      }
+    },
+    "NodeTaskDef149AF066": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "ContainerDefinitions": [
+          {
+            "DependsOn": [
+              {
+                "Condition": "COMPLETE",
+                "ContainerName": "initContainer"
+              }
+            ],
+            "Environment": [
+              {
+                "Name": "DB_HOST",
+                "Value": {
+                  "Fn::GetAtt": [
+                    "DBCluster",
+                    "Endpoint.Address"
+                  ]
+                }
+              },
+              {
+                "Name": "DB_PORT",
+                "Value": "5432"
+              },
+              {
+                "Name": "DB_NAME",
+                "Value": "bugbounty"
+              },
+              {
+                "Name": "DB_USER",
+                "Value": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "{{resolve:secretsmanager:",
+                      {
+                        "Ref": "DBCredentialsSecretAFB45EA2"
+                      },
+                      ":SecretString:username::}}"
+                    ]
+                  ]
+                }
+              },
+              {
+                "Name": "DB_PASS",
+                "Value": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "{{resolve:secretsmanager:",
+                      {
+                        "Ref": "DBCredentialsSecretAFB45EA2"
+                      },
+                      ":SecretString:password::}}"
+                    ]
+                  ]
+                }
+              }
+            ],
+            "Essential": true,
+            "Image": "public.ecr.aws/r7j4v9s7/geekweek-node:latest",
+            "Name": "NodeContainer",
+            "PortMappings": [
+              {
+                "ContainerPort": 3000,
+                "HostPort": 3000,
+                "Protocol": "tcp"
+              }
+            ]
+          }
+        ],
+        "Cpu": "256",
+        "Family": "GeekweekinfraStackNodeTaskDefB15F80D9",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "NodeTaskDefTaskRole9A06DB29",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/NodeTaskDef/Resource"
+      }
+    },
+    "ClusterEB0386A7": {
+      "Type": "AWS::ECS::Cluster",
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/Cluster/Resource"
+      }
+    },
+    "ServiceD69D759B": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": {
+          "Ref": "ClusterEB0386A7"
+        },
+        "DeploymentConfiguration": {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50
+        },
+        "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LaunchType": "FARGATE",
+        "LoadBalancers": [
+          {
+            "ContainerName": "NodeContainer",
+            "ContainerPort": 3000,
+            "TargetGroupArn": {
+              "Ref": "LBListenerECSGroup1D445DF5"
+            }
+          }
+        ],
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": [
+              {
+                "Fn::GetAtt": [
+                  "ServiceSecurityGroupC96ED6A7",
+                  "GroupId"
+                ]
+              }
+            ],
+            "Subnets": [
+              {
+                "Ref": "GWNodeVPCecsprivateSubnet1Subnet4E018615"
+              },
+              {
+                "Ref": "GWNodeVPCecsprivateSubnet2Subnet5A58DDD6"
+              }
+            ]
+          }
+        },
+        "TaskDefinition": {
+          "Ref": "NodeTaskDef149AF066"
+        }
+      },
+      "DependsOn": [
+        "LBListenerECSGroup1D445DF5",
+        "LBListener49E825B4"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/Service/Service"
+      }
+    },
+    "ServiceSecurityGroupC96ED6A7": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "GeekweekinfraStack/Service/SecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/Service/SecurityGroup/Resource"
+      }
+    },
+    "ServiceSecurityGroupfromGeekweekinfraStackLBSecurityGroup2AC95B113000C5694A12": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "Load balancer to target",
+        "FromPort": 3000,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "ServiceSecurityGroupC96ED6A7",
+            "GroupId"
+          ]
+        },
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "LBSecurityGroup8A41EA2B",
+            "GroupId"
+          ]
+        },
+        "ToPort": 3000
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/Service/SecurityGroup/from GeekweekinfraStackLBSecurityGroup2AC95B11:3000"
+      }
+    },
+    "LB8A12904C": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "LoadBalancerAttributes": [
+          {
+            "Key": "deletion_protection.enabled",
+            "Value": "false"
+          }
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": [
+          {
+            "Fn::GetAtt": [
+              "LBSecurityGroup8A41EA2B",
+              "GroupId"
+            ]
+          }
+        ],
+        "Subnets": [
+          {
+            "Ref": "GWNodeVPCelbpublicSubnet1Subnet14D8B1CC"
+          },
+          {
+            "Ref": "GWNodeVPCelbpublicSubnet2SubnetC1A6616D"
+          }
+        ],
+        "Type": "application"
+      },
+      "DependsOn": [
+        "GWNodeVPCelbpublicSubnet1DefaultRoute1A482B83",
+        "GWNodeVPCelbpublicSubnet2DefaultRoute80CBFDFE"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/LB/Resource"
+      }
+    },
+    "LBSecurityGroup8A41EA2B": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Automatically created Security Group for ELB GeekweekinfraStackLB8FA6A89F",
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 3000",
+            "FromPort": 3000,
+            "IpProtocol": "tcp",
+            "ToPort": 3000
+          }
+        ],
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/LB/SecurityGroup/Resource"
+      }
+    },
+    "LBSecurityGrouptoGeekweekinfraStackServiceSecurityGroupFB21DE1E3000612C5BC1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Fn::GetAtt": [
+            "LBSecurityGroup8A41EA2B",
+            "GroupId"
+          ]
+        },
+        "IpProtocol": "tcp",
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Fn::GetAtt": [
+            "ServiceSecurityGroupC96ED6A7",
+            "GroupId"
+          ]
+        },
+        "FromPort": 3000,
+        "ToPort": 3000
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/LB/SecurityGroup/to GeekweekinfraStackServiceSecurityGroupFB21DE1E:3000"
+      }
+    },
+    "LBListener49E825B4": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "DefaultActions": [
+          {
+            "TargetGroupArn": {
+              "Ref": "LBListenerECSGroup1D445DF5"
+            },
+            "Type": "forward"
+          }
+        ],
+        "LoadBalancerArn": {
+          "Ref": "LB8A12904C"
+        },
+        "Port": 3000,
+        "Protocol": "HTTP"
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/LB/Listener/Resource"
+      }
+    },
+    "LBListenerECSGroup1D445DF5": {
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties": {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetGroupAttributes": [
+          {
+            "Key": "stickiness.enabled",
+            "Value": "false"
+          }
+        ],
+        "TargetType": "ip",
+        "VpcId": {
+          "Ref": "GWNodeVPCBE9CBA6D"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "GeekweekinfraStack/LB/Listener/ECSGroup/Resource"
+      }
+    },
     "CDKMetadata": {
       "Type": "AWS::CDK::Metadata",
       "Properties": {
-        "Analytics": "v2:deflate64:H4sIAAAAAAAA/01QQW7CMBB8S++OW1CrniFUiEsVJRXXynG2dCG20XoNQlH+XjuhCaedHY/H41nKxZt8eVJXn+nmlLVYy65ipU8iUt8d6KXs9mct8h+7L3JRhLpFXYXaAiduRqULDF+qbmHmZ27lvdOoGJ2dxAl87Io0PhVvFcNV3URBeIlwNt5ZBor4XzAmuW8rjll/DVgWFehAyLctuXAeMjwSvaDGyy7Sm/XoPek267wNPj7SCw+agL1RVh2AYhPDfjeLKCq8SQUR2kOhSBmI99L5tPS9KMG7QHr44CPOnW0wVdAL6xqQR/98WbzL19j/0SNmFCyjAVmO8w/RQcjlmwEAAA=="
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/31STW+DMAz9LbunbK027dyvVZWmCUHV62SCy9xCgpLQqkL89xlCC9uknfz8/LBfbGbB9CV4eoCLncj0NMkpCerYgTwJpj5rlLOg3pdSLA9qHy5FWCU5ybhKFLqWG1CkK4c7SHIc+IGbW6slgSOt7uIWrLdhGz7AbcDhBa4iNHRmODTeKoeG8U3gnfTZ3LHXrwKVEzHKypC7boyuys7Dv8RWZQat/cOvO7oRJrVBzcXVwlu5d1ktlnll2VMjLEqDzhagIEPDi+vyviUjVtii3achlYVgoED+rq3fk0ag5EFvYDJod2VPKzyQotumfjNaOSCFZsx5O636Bvt2MZozSX8QDxtBwI4i7c/URnaQg3Ukcw1pAjkoyW7PfPd5WfKxu6O9c23R1fygH/lYRzxf9ZobHtV3bGy0y1HaNCJCqyvj/Y4xPzrtntoIpVMMjvbxPH0Nnvm/PVqiiamUowKDyMdvR0hRNdMCAAA="
       },
       "Metadata": {
         "aws:cdk:path": "GeekweekinfraStack/CDKMetadata/Default"
